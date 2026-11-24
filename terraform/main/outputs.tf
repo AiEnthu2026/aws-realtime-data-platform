@@ -5,3 +5,7 @@ output "bucket_names" {
 output "stream_name" {
   value = aws_kinesis_stream.vehicle_positions.name
 }
+
+output "tfnsw_api_key_param" {
+  value = aws_ssm_parameter.tfnsw_api_key.name
+}
