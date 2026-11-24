@@ -12,3 +12,8 @@ variable "environment" {
   type    = string
   default = "dev"
 }
+
+variable "producer_schedule_enabled" {
+  type    = bool
+  default = false
+}
