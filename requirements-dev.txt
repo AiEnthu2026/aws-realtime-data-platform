@@ -1,0 +1,3 @@
+-r src/producer/requirements.txt
+boto3
+pytest
