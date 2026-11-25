@@ -23,7 +23,7 @@ resource "aws_lambda_function" "api" {
   source_code_hash = data.archive_file.api.output_base64sha256
   memory_size      = 256
   timeout          = 25
-  
+
   environment {
     variables = {
       ATHENA_WORKGROUP = aws_athena_workgroup.rtdp.name

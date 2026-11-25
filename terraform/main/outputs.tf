@@ -21,3 +21,7 @@ output "api_client_id" {
 output "cognito_token_url" {
   value = "https://${aws_cognito_user_pool_domain.api.domain}.auth.${var.region}.amazoncognito.com/oauth2/token"
 }
+
+output "api_url" {
+  value = aws_apigatewayv2_stage.default.invoke_url
+}
