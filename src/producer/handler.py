@@ -18,12 +18,17 @@ ssm = boto3.client("ssm")
 kinesis = boto3.client("kinesis")
 s3 = boto3.client("s3")
 
-API_KEY = ssm.get_parameter(Name=API_KEY_PARAM, WithDecryption=True)["Parameter"]["Value"]
 last_feed_ts = 0
 
+_api_key = None
+def get_api_key():
+    global _api_key
+    if _api_key is None:
+        _api_key = ssm.get_parameter(Name=API_KEY_PARAM, WithDecryption=True)["Parameter"]["Value"]
+    return _api_key
 
 def fetch_feed():
-    request = urllib.request.Request(FEED_URL, headers={"Authorization": f"apikey {API_KEY}"})
+    request = urllib.request.Request(FEED_URL, headers={"Authorization": f"apikey {get_api_key()}"})
     with urllib.request.urlopen(request, timeout=10) as response:
         return response.read()
 
