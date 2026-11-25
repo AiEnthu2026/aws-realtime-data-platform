@@ -9,3 +9,15 @@ output "stream_name" {
 output "tfnsw_api_key_param" {
   value = aws_ssm_parameter.tfnsw_api_key.name
 }
+
+output "cognito_user_pool_id" {
+  value = aws_cognito_user_pool.api.id
+}
+
+output "api_client_id" {
+  value = aws_cognito_user_pool_client.api_client.id
+}
+
+output "cognito_token_url" {
+  value = "https://${aws_cognito_user_pool_domain.api.domain}.auth.${var.region}.amazoncognito.com/oauth2/token"
+}
