@@ -10,6 +10,8 @@ os.environ.setdefault("FEED_URL", "https://example.test/feed")
 os.environ.setdefault("STREAM_NAME", "test-stream")
 os.environ.setdefault("RAW_BUCKET", "test-raw")
 os.environ.setdefault("API_KEY_PARAM", "/test/api-key")
+os.environ.setdefault("ATHENA_WORKGROUP", "test-wg")
+os.environ.setdefault("GLUE_DATABASE", "test_db")
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -28,3 +30,7 @@ def consumer():
 @pytest.fixture
 def producer():
     return load("producer_handler", "src/producer/handler.py")
+
+@pytest.fixture
+def api():
+    return load("api_handler", "src/api/handler.py")
