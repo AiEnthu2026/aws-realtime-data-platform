@@ -97,3 +97,45 @@ resource "aws_iam_role_policy" "consumer" {
   role   = aws_iam_role.consumer.id
   policy = data.aws_iam_policy_document.consumer.json
 }
+
+resource "aws_iam_role" "api" {
+  name               = "${local.name_prefix}-api"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
+}
+
+data "aws_iam_policy_document" "api" {
+  statement {
+    actions   = ["athena:StartQueryExecution", "athena:GetQueryExecution", "athena:GetQueryResults", "athena:StopQueryExecution"]
+    resources = [aws_athena_workgroup.rtdp.arn]
+  }
+  statement {
+    actions = ["glue:GetDatabase", "glue:GetTable", "glue:GetPartitions"]
+    resources = [
+      "arn:aws:glue:${var.region}:${local.account_id}:catalog",
+      aws_glue_catalog_database.rtdp.arn,
+      aws_glue_catalog_table.vehicle_positions.arn,
+    ]
+  }
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.data["curated"].arn}/vehicle_positions/*"]
+  }
+  statement {
+    actions   = ["s3:ListBucket", "s3:GetBucketLocation"]
+    resources = [aws_s3_bucket.data["curated"].arn, aws_s3_bucket.data["athena-results"].arn]
+  }
+  statement {
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:AbortMultipartUpload"]
+    resources = ["${aws_s3_bucket.data["athena-results"].arn}/*"]
+  }
+  statement {
+    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["${aws_cloudwatch_log_group.api.arn}:*"]
+  }
+}
+
+resource "aws_iam_role_policy" "api" {
+  name   = "${local.name_prefix}-api"
+  role   = aws_iam_role.api.id
+  policy = data.aws_iam_policy_document.api.json
+}
