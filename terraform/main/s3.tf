@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "data" {
-  for_each      = toset(["raw", "curated", "athena-results"])
+  for_each      = toset(["raw", "curated", "athena-results", "gold", "artifacts"])
   bucket        = "${local.name_prefix}-${each.key}-${local.account_id}"
   force_destroy = true
 }
