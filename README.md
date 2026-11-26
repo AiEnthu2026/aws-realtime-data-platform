@@ -86,10 +86,11 @@ Unit tests cover parsing, UTC partitioning, partial batch failure, retry of fail
 - Rows without a `trip_id` are rare (2 of ~116k on 2026-11-24 UTC); kept in Silver, excluded from Gold.
 - Silver and Gold reconcile: Gold's 9:00 Sydney hour on 2026-11-25 has 4,355 positions against Silver's 4,357; the difference is the 2 rows without a trip.
 
-## Findings (24-hour capture)
+## Findings (24-hour capture, 25-26 Nov 2026, Sydney time)
 
-- Peak: __ vehicle-runs at __:00 Sydney time; overnight low of __ at __:00.
-- Latest snapshot: __ buses inside the CBD; __ within 500 m of Town Hall.
+- Two equal peaks: 7,403 vehicle-runs at 08:00 and 7,402 at 15:00 (school finish), against an overnight low of 143 at 03:00.
+- Midday is flat at about 3,500 vehicle-runs between 10:00 and 13:00.
+- Evening snapshot on 26 Nov: 155 buses inside the CBD and 44 within 500 m of Town Hall.
 
 Queries in `sql/`, results in `docs/sample_results/`.
 
