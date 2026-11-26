@@ -115,6 +115,15 @@ docs/sample_results   query and API outputs
 3. Store the TfNSW key: `aws ssm put-parameter --name /rtdp/dev/tfnsw/api-key --type SecureString --value "<key>" --overwrite`
 4. Local environment: `python -m venv .venv`, activate it, `pip install -r requirements-dev.txt`
 
+## Screenshots
+
+| | |
+|---|---|
+| Gold hourly profile in Athena | ![Athena](docs/images/athena.png) |
+| Records in Kinesis | ![Kinesis](docs/images/kinesis.png) |
+| Silver partitions in S3 | ![S3](docs/images/s3.png) |
+| API: 401 without token, 200 with token | ![API](docs/images/terminal.png) |
+
 ## Build and deploy
 
 The producer needs its dependencies vendored; the other functions and the Glue script are packaged by Terraform.
