@@ -3,7 +3,7 @@ import pathlib
 
 import pytest
 
-EVENTS = pathlib.Path(__file__).parent / "events"
+EVENTS = pathlib.Path(__file__).parent.parent / "events"
 
 
 def load_event(name):
