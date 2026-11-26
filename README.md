@@ -67,9 +67,17 @@ API Gateway (HTTP API, Cognito JWT) -> Query Lambda -> Athena
 | 400 | Invalid or missing parameters, or a point outside Sydney |
 | 401 | Missing, invalid or expired token |
 | 404 | Unknown route |
+| 429 | Throttled by the API stage (5 requests/s, burst 10) |
+| 500 | Unexpected server error (logged in CloudWatch) |
 | 504 | Query exceeded the time limit; the query is stopped |
 
-Sample response: `docs/sample_results/api_near_response.json`
+Example: `GET /buses/near?lat=-33.8732&lon=151.2069&radius_m=300`
+
+```json
+{"buses": [{"vehicle_id": "43054_219818433_2459_442", "route_id": "2459_442", "metres": 57}, ...]}
+```
+
+The full request flow (401 without a token, 200 with one) is in `docs/images/terminal.png`.
 
 ## Testing
 
@@ -88,7 +96,7 @@ Unit tests cover parsing, UTC partitioning, partial batch failure, retry of fail
 
 ## Findings (24-hour capture, 25-26 Nov 2026, Sydney time)
 
-- Two equal peaks: 7,403 vehicle-runs at 08:00 and 7,402 at 15:00 (school finish), against an overnight low of 143 at 03:00.
+- Two equal peaks: 7,403 vehicle-runs at 08:00 and 7,402 at 15:00 (likely school finish), against an overnight low of 143 at 03:00.
 - Midday is flat at about 3,500 vehicle-runs between 10:00 and 13:00.
 - Evening snapshot on 26 Nov: 155 buses inside the CBD and 44 within 500 m of Town Hall.
 
@@ -106,7 +114,7 @@ src/glue              Glue PySpark job
 sql/                  Athena queries
 tests/unit            offline unit tests
 tests/integration     live API tests (opt-in)
-docs/sample_results   query and API outputs
+docs/sample_results   Athena query outputs
 ```
 
 ## Setup
@@ -156,3 +164,4 @@ terraform -chdir=terraform/main apply
 - On the April daylight-saving change, Gold's `sydney_hour = 2` combines two real hours
 - The Gold job runs on demand
 - The Cognito client secret is stored in Terraform state, which is encrypted and private
+- Pull-request workflows use the same deploy role; plan-only runs should use a separate read-only role
