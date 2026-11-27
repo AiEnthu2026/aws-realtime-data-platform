@@ -1,0 +1,22 @@
+name: oidc-smoke-test
+
+on:
+  push:
+    branches: [develop]
+    paths: [".github/workflows/oidc-smoke-test.yml"]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  whoami:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+          mask-aws-account-id: true
+      - run: aws sts get-caller-identity
